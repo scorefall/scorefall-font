@@ -1,0 +1,214 @@
+# SMuFL
+
+## Private Symbols
+- E042: Repeat Sign Close & Open
+- E080: Time Signature 0
+- E081: Time Signature 1
+- E082: Time Signature 2
+- E083: Time Signature 3
+- E084: Time Signature 4
+- E085: Time Signature 5
+- E086: Time Signature 6
+- E087: Time Signature 7
+- E088: Time Signature 8
+- E089: Time Signature 9
+- E280: 1/2 (1 Quarter Tone) Flat
+- E281: 3/2 (3 Quarter Tones) Flat
+- E282: 1/2 (1 Quarter Tone) Sharp
+- E283: 3/2 (3 Quarter Tones) Sharp
+
+## Unicode "Music Symbols" Block (1D100—1D1FF)
+- 1D100: Barline (separates bars) 𝄀
+- 1D101: Double Barline (ends section) 𝄁
+- 1D102: Final Barline (ends piece) 𝄂
+- 1D103: Reverse Final Barline (??????) 𝄃
+- 1D104: Dashed Barline (??????) 𝄄
+- 1D105: Short Barline (??????) 𝄅
+- 1D106: Left Repeat Sign (open repeat) 𝄆
+- 1D107: Right Repeat Sign (close repeat) 𝄇
+- 1D108: Repeat Dots (??????) 𝄈
+- 1D109: Dal Segno (go back to the sign) 𝄉
+- 1D10A: Da Capo (go back to the start) 𝄊
+- 1D10B: Segno (the sign) 𝄋
+- 1D10C: Coda (ending) 𝄌
+- 1D10D: Repeated (repeat previous measure) 𝄍
+- 1D10E: Repeated Figure-2 (repeat previous measure) 𝄎
+- 1D10F: Repeated Figure-3 (repeat previous measure) 𝄏
+- 1D110: Fermata Above (hold long) 𝄐
+- 1D111: Fermata Below (hold long) 𝄑
+- 1D112: Breath Mark (breathe here) 𝄒
+- 1D113: Caesura (grand pause) 𝄓
+- 1D114: Brace (group systems) 𝄔
+- 1D115: Bracket (group systems) 𝄕
+- 1D116: One-Line Staff (percussion staff) 𝄖
+- 1D117: Two-Line Staff 𝄗
+- 1D118: Three-Line Staff 𝄘
+- 1D119: Four-Line Staff 𝄙
+- 1D11A: Five-Line Staff 𝄚
+- 1D11B: Six-Line Staff 𝄛
+- 1D11C: Six-String Fretboard 𝄜
+- 1D11D: Four-String Fretboard 𝄝
+- 1D11E: G Clef 𝄞
+- 1D11F: G Clef Ottava Alta 𝄟
+- 1D120: G Clef Ottava Bassa 𝄠
+- 1D121: C Clef 𝄡
+- 1D122: F Clef 𝄢
+- 1D123: F Clef Ottava Alta 𝄣
+- 1D124: F Clef Ottava Bassa 𝄤
+- 1D125: Drum Clef-1 𝄥
+- 1D126: Drum Clef-2 𝄦
+- 1D127: UNASSIGNED
+- 1D128: UNASSIGNED
+- 1D129: Multi-Measure Rest
+- 1D12A: Double Sharp
+- 1D12B: Double Flat
+- 1D12C: Flat Up
+- 1D12D: Flat Down
+- 1D12E: Natural Up
+- 1D12F: Natural Down
+- 1D130: Sharp Up
+- 1D131: Sharp Down
+- 1D132: Quarter Tone Sharp
+- 1D133: Quarter Tone Flat
+- 1D134: Common Time
+- 1D135: Cut Time
+- 1D136: Ottava Alta
+- 1D137: Ottava Bassa
+- 1D138: Quindicesima alta 
+- 1D139: Quindicesima bassa
+- 1D13A: Multi-Measure Rest (alternate for 1D129)
+- 1D13B: Whole Rest
+- 1D13C: Half Rest
+- 1D13D: Quarter Rest
+- 1D13E: Eigth Rest
+- 1D13F: Sixteenth Rest
+- 1D140: 32nd Rest
+- 1D141: 64th Rest
+- 1D142: 128th Rest
+- 1D143: Notehead X 
+- 1D144: Notehead +
+- 1D145: Notehead Circle X
+- 1D146: Notehead Square Outline
+- 1D147: Notehead Square Filled
+- 1D148: Notehead Triangle Outline
+- 1D149: Notehead Triangle Filled
+- 1D14A: Notehead Left Outline
+- 1D14B: Notehead Left Filled
+- 1D14C: Notehead Right Outline
+- 1D14D: Notehead Right Filled
+- 1D14E: Notehead Down Outline
+- 1D14F: Notehead Down Filled
+- 1D150: Notehead Upright Outline
+- 1D151: Notehead Upright Filled
+- 1D152: Notehead Moon Outline
+- 1D153: Notehead Moon Fill
+- 1D154: Notehead Round Triangle Outline
+- 1D155: Notehead Round Triangle Filled
+- 1D156: Notehead Parenthesis
+- 1D157: Notehead (Outline)
+- 1D158: Notehead (Fill)
+- 1D159: Notehead Null (none)
+- 1D15A: Notehead Cluster Outline
+- 1D15B: Notehead Cluster Fill
+- 1D15C: Breve (8 beats)
+- 1D15D: Whole Note (4 beats)
+- 1D15E: Half Note (2 beats)
+- 1D15F: Quarter Note (1 beat)
+- 1D160: Eigth Note (1/2 beat)
+- 1D161: 16th Note (1/4 beat)
+- 1D162: 32th Note (1/8 beat)
+- 1D163: 64th Note (1/16 beat)
+- 1D164: 128th Note (1/32 beat)
+- 1D165: Note Stem
+- 1D166: Sprechgesang Stem (??????)
+- 1D167: Tremelo-1 Combining
+- 1D168: Tremelo-2 Combining
+- 1D169: Tremelo-3 Combining
+- 1D16A: Tremelo-1 Fingered (difference???)
+- 1D16B: Tremelo-2 Combining (difference???)
+- 1D16C: Tremelo-3 Combining (difference???)
+- 1D16D: Augmentation Dot (1.5 times duration)
+- 1D16E: Flag-8th
+- 1D16F: Flag-16th
+- 1D170: Flag-32nd
+- 1D171: Flag-64th
+- 1D172: Flag-128th
+- 1D173: BEGIN BEAM
+- 1D174: END BEAM
+- 1D175: BEGIN TIE
+- 1D176: END TIE
+- 1D177: BEGIN SLUR
+- 1D178: END SLUR
+- 1D179: BEGIN PHRASE
+- 1D17A: END PHRASE
+- 1D17B: Accent >
+- 1D17C: Staccato .
+- 1D17D: Tenuto _
+- 1D17E: Staccatissimo '
+- 1D17F: Marcato ^
+- 1D180: Marcato Staccato ^.
+- 1D181: Accent Staccato >.
+- 1D182: Loure >_
+- 1D183: Arpeggiato Up
+- 1D184: Arpeggiato Down
+- 1D185: 
+- 1D186:
+- 1D187:
+- 1D188:
+- 1D189:
+- 1D18A:
+- 1D18B:
+- 1D18C: R
+- 1D18D: S
+- 1D18E: Z
+- 1D18F: P
+- 1D190: M
+- 1D191: F
+- 1D192: Crescendo
+- 1D193: Decrescendo
+- 1D194: Grace Note (Slash)
+- 1D195: Grace Note (No Slash)
+- 1D196: Trill
+- 1D197: Turn
+- 1D198: Inverted Turn
+- 1D199: 
+- 1D19A:
+- 1D19B:
+- 1D19C:
+- 1D19D:
+- 1D19E:
+- 1D19F:
+- 1D1A0:
+- 1D1A1:
+- 1D1A2:
+- 1D1A3:
+- 1D1A4:
+- 1D1A5:
+- 1D1A6:
+- 1D1A7:
+- 1D1A8:
+- 1D1A9:
+- 1D1AA:
+- 1D1AB:
+- 1D1AC: Harmonic
+- 1D1AD:
+- 1D1AE: Pedal Down
+- 1D1AF: Pedal Up
+- 1D1B0:
+- 1D1B1: Glissando Up (squiggly)
+- 1D1B2: Glissando Down (squiggly)
+- 1D1B3:
+- 1D1B4:
+- 1D1B5:
+- 1D1B6:
+- 1D1B7:
+- 1D1B8:
+- 1D1B9:
+- 1D1BA:
+- 1D1BB:
+- 1D1BC:
+- 1D1BD:
+- 1D1BE:
+- 1D1BF:
+------------
+- FIXME: There's More!!!!
