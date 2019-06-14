@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 score2svg = {path = "../score2svg"}
+svgdom = "0.17"
