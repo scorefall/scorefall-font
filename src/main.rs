@@ -50,12 +50,6 @@ fn main() -> Result<(), svgdom::ParserError> {
                 use GlyphId::*;
 
                 match name.as_str() {
-                    "uniE010" => add(&mut out, Staff1, path),
-                    "uniE011" => add(&mut out, Staff2, path),
-                    "uniE012" => add(&mut out, Staff3, path),
-                    "uniE013" => add(&mut out, Staff4, path),
-                    "uniE014" => add(&mut out, Staff5, path),
-                    "uniE015" => add(&mut out, Staff6, path),
                     "uniE06E" => add(&mut out, ClefTab4, path),
                     "uniE06D" => add(&mut out, ClefTab6, path),
                     "uniE05C" => add(&mut out, ClefC, path),
@@ -81,7 +75,10 @@ fn main() -> Result<(), svgdom::ParserError> {
                     "uniE247" | "flags.d6" => add(&mut out, FlagDown64, path),
                     "uniE248" | "flags.u7" => add(&mut out, FlagUp128, path),
                     "uniE249" | "flags.d7" => add(&mut out, FlagDown128, path),
+                    "uniE0A2" | "noteheads.s0" => add(&mut out, NoteheadWhole, path),
                     "uniE0A3" | "noteheads.s1" => add(&mut out, NoteheadHalf, path),
+                    "uniE0A4" | "noteheads.s2" => add(&mut out, NoteheadFill, path),
+
                     "uniE080" => add(&mut out, TimeSig0, path),
                     "uniE081" => add(&mut out, TimeSig1, path),
                     "uniE082" => add(&mut out, TimeSig2, path),
