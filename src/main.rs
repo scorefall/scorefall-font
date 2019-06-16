@@ -4,12 +4,31 @@ use std::fs;
 use score2svg::GlyphId;
 use svgdom::{AttributeId, AttributeValue, Document, ElementId, FilterSvg, PathCommand};
 use svgdom::{NodeType, WriteBuffer};
+use svgdom::PathBuilder;
 
 const BRAVURA: &'static str = include_str!("../svg/bravura.svg");
 const FONTNAME: &'static str = "vfont/bravura.vfont";
 
 fn add(out: &mut String, id: GlyphId, path: &svgdom::Path) {
-    out.push_str(&format!("<path transform=\"scale(1 -1)\" id=\"{:x}\" d=\"{}\"/>", id as u32, path));
+    let mut newpath = svgdom::Path(Vec::with_capacity(path.0.capacity()));
+
+    for i in path.0.iter() {
+        use svgdom::PathSegment::*;
+        match i {
+            &MoveTo{abs, x, y} => newpath.0.push(MoveTo{abs, x, y:-y}),
+            &LineTo{abs, x, y} => newpath.0.push(LineTo{abs, x, y:-y}),
+            &HorizontalLineTo{abs, x} => newpath.0.push(HorizontalLineTo{abs, x}),
+            &VerticalLineTo{abs, y} => newpath.0.push(VerticalLineTo{abs, y:-y}),
+            &CurveTo{abs, x1, y1, x2, y2, x, y} => newpath.0.push(CurveTo{abs, x1, y1:-y1, x2, y2:-y2, x, y:-y}),
+            &SmoothCurveTo{abs, x2, y2, x, y} => newpath.0.push(SmoothCurveTo{abs, x2, y2:-y2, x, y:-y}),
+            &Quadratic{abs, x1, y1, x, y} => newpath.0.push(Quadratic{abs, x1, y1:-y1, x, y:-y}),
+            &SmoothQuadratic{abs, x, y} => newpath.0.push(SmoothQuadratic{abs, x, y:-y}),
+            &EllipticalArc{abs, rx, ry, x_axis_rotation, large_arc, sweep, x, y} => newpath.0.push(EllipticalArc{abs, rx, ry:-ry, x_axis_rotation, large_arc, sweep, x, y:-y}),
+            &ClosePath{abs} => newpath.0.push(ClosePath{abs}),
+        }
+    }
+
+    out.push_str(&format!("<path id=\"{:x}\" d=\"{}\"/>\n", id as u32, newpath));
 }
 
 fn main() -> Result<(), svgdom::ParserError> {
@@ -19,7 +38,7 @@ fn main() -> Result<(), svgdom::ParserError> {
     let doc = svgdom::Document::from_str(&input_data)?;
     let mut out = String::new();
 
-    out.push_str("<defs>");
+    out.push_str("<defs>\n");
 
     for (id, node) in doc.root().descendants().svg() {
         let attrs = node.attributes();
@@ -50,6 +69,7 @@ fn main() -> Result<(), svgdom::ParserError> {
                 use GlyphId::*;
 
                 match name.as_str() {
+                    "uniE030" => add(&mut out, Barline, path),
                     "uniE06E" => add(&mut out, ClefTab4, path),
                     "uniE06D" => add(&mut out, ClefTab6, path),
                     "uniE05C" => add(&mut out, ClefC, path),
@@ -102,7 +122,7 @@ fn main() -> Result<(), svgdom::ParserError> {
         }
     }
 
-    out.push_str("</defs>");
+    out.push_str("</defs>\n");
 
     fs::write(FONTNAME, &out).unwrap();
 
