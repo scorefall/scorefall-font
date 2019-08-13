@@ -99,6 +99,16 @@ fn main() -> Result<(), svgdom::ParserError> {
                     "uniE0A3" | "noteheads.s1" => add(&mut out, NoteheadHalf, path),
                     "uniE0A4" | "noteheads.s2" => add(&mut out, NoteheadFill, path),
 
+                    "uniE4E3" => add(&mut out, Rest1, path),
+                    "uniE4E4" => add(&mut out, Rest2, path),
+                    "uniE4E5" => add(&mut out, Rest4, path),
+                    "uniE4F2" => add(&mut out, Rest4Old, path),
+                    "uniE4E6" => add(&mut out, Rest8, path),
+                    "uniE4E7" => add(&mut out, Rest16, path),
+                    "uniE4E8" => add(&mut out, Rest32, path),
+                    "uniE4E9" => add(&mut out, Rest64, path),
+                    "uniE4EA" => add(&mut out, Rest128, path),
+
                     "uniE080" => add(&mut out, TimeSig0, path),
                     "uniE081" => add(&mut out, TimeSig1, path),
                     "uniE082" => add(&mut out, TimeSig2, path),
