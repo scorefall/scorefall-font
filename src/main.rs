@@ -28,7 +28,7 @@ fn add(out: &mut String, id: GlyphId, path: &svgdom::Path) {
         }
     }
 
-    out.push_str(&format!("<path id=\"{:x}\" d=\"{}\"/>\n", id as u32, newpath));
+    out.push_str(&format!("Path::new(Some(\"{:x}\"), \"{}\"),\n", id as u32, newpath));
 }
 
 fn main() -> Result<(), svgdom::ParserError> {
@@ -38,7 +38,7 @@ fn main() -> Result<(), svgdom::ParserError> {
     let doc = svgdom::Document::from_str(&input_data)?;
     let mut out = String::new();
 
-    out.push_str("<defs>\n");
+    out.push_str("vec![\n");
 
     for (id, node) in doc.root().descendants().svg() {
         let attrs = node.attributes();
@@ -132,7 +132,7 @@ fn main() -> Result<(), svgdom::ParserError> {
         }
     }
 
-    out.push_str("</defs>\n");
+    out.push_str("];\n");
 
     fs::write(FONTNAME, &out).unwrap();
 
