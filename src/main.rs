@@ -95,6 +95,7 @@ fn main() -> Result<(), svgdom::ParserError> {
                     "uniE247" | "flags.d6" => add(&mut out, FlagDown64, path),
                     "uniE248" | "flags.u7" => add(&mut out, FlagUp128, path),
                     "uniE249" | "flags.d7" => add(&mut out, FlagDown128, path),
+                    "uniE0A0" => add(&mut out, NoteheadDoubleWhole, path),
                     "uniE0A2" | "noteheads.s0" => add(&mut out, NoteheadWhole, path),
                     "uniE0A3" | "noteheads.s1" => add(&mut out, NoteheadHalf, path),
                     "uniE0A4" | "noteheads.s2" => add(&mut out, NoteheadFill, path),
