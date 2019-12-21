@@ -1,10 +1,7 @@
-use std::env;
 use std::fs;
 
 use score2svg::GlyphId;
-use svgdom::{AttributeId, AttributeValue, Document, ElementId, FilterSvg, PathCommand};
-use svgdom::{NodeType, WriteBuffer};
-use svgdom::PathBuilder;
+use svgdom::{AttributeId, AttributeValue, ElementId, FilterSvg};
 
 const BRAVURA: &'static str = include_str!("../svg/bravura.svg");
 const FONTNAME: &'static str = "vfont/bravura.vfont";
@@ -44,7 +41,7 @@ fn main() -> Result<(), svgdom::ParserError> {
         let attrs = node.attributes();
         match id {
             ElementId::Path => {
-                if let Some(&AttributeValue::Path(ref path)) = attrs.get_value(AttributeId::D) {
+                if let Some(&AttributeValue::Path(ref _path)) = attrs.get_value(AttributeId::D) {
                     println!("path");
                 }
             }
@@ -133,34 +130,9 @@ fn main() -> Result<(), svgdom::ParserError> {
         }
     }
 
-    out.push_str("];\n");
+    out.push_str("]");
 
     fs::write(FONTNAME, &out).unwrap();
-
-    /*    for op in &mut path {
-        match op {
-            Close() => {
-                println!("CLOSE");
-            }
-            Move(x, y) => {
-                println!("MOVE");
-            }
-            Line(x, y) => {
-                println!("LINE");
-            }
-            Quad(cx, cy, x, y) => {
-                println!("QUAD");
-            }
-            Cubic(ax, ay, bx, by, x, y) => {
-                println!("CUBIC");
-            }
-            PenWidth(a) => {
-                println!("We don't do that {}", a);
-            }
-        }
-    }*/
-
-    //    println!("{:?}", path.xy());
 
     Ok(())
 }
