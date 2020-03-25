@@ -12,20 +12,69 @@ fn add(out: &mut String, id: GlyphId, path: &svgdom::Path) {
     for i in path.0.iter() {
         use svgdom::PathSegment::*;
         match i {
-            &MoveTo{abs, x, y} => newpath.0.push(MoveTo{abs, x, y:-y}),
-            &LineTo{abs, x, y} => newpath.0.push(LineTo{abs, x, y:-y}),
-            &HorizontalLineTo{abs, x} => newpath.0.push(HorizontalLineTo{abs, x}),
-            &VerticalLineTo{abs, y} => newpath.0.push(VerticalLineTo{abs, y:-y}),
-            &CurveTo{abs, x1, y1, x2, y2, x, y} => newpath.0.push(CurveTo{abs, x1, y1:-y1, x2, y2:-y2, x, y:-y}),
-            &SmoothCurveTo{abs, x2, y2, x, y} => newpath.0.push(SmoothCurveTo{abs, x2, y2:-y2, x, y:-y}),
-            &Quadratic{abs, x1, y1, x, y} => newpath.0.push(Quadratic{abs, x1, y1:-y1, x, y:-y}),
-            &SmoothQuadratic{abs, x, y} => newpath.0.push(SmoothQuadratic{abs, x, y:-y}),
-            &EllipticalArc{abs, rx, ry, x_axis_rotation, large_arc, sweep, x, y} => newpath.0.push(EllipticalArc{abs, rx, ry:-ry, x_axis_rotation, large_arc, sweep, x, y:-y}),
-            &ClosePath{abs} => newpath.0.push(ClosePath{abs}),
+            &MoveTo { abs, x, y } => newpath.0.push(MoveTo { abs, x, y: -y }),
+            &LineTo { abs, x, y } => newpath.0.push(LineTo { abs, x, y: -y }),
+            &HorizontalLineTo { abs, x } => newpath.0.push(HorizontalLineTo { abs, x }),
+            &VerticalLineTo { abs, y } => newpath.0.push(VerticalLineTo { abs, y: -y }),
+            &CurveTo {
+                abs,
+                x1,
+                y1,
+                x2,
+                y2,
+                x,
+                y,
+            } => newpath.0.push(CurveTo {
+                abs,
+                x1,
+                y1: -y1,
+                x2,
+                y2: -y2,
+                x,
+                y: -y,
+            }),
+            &SmoothCurveTo { abs, x2, y2, x, y } => newpath.0.push(SmoothCurveTo {
+                abs,
+                x2,
+                y2: -y2,
+                x,
+                y: -y,
+            }),
+            &Quadratic { abs, x1, y1, x, y } => newpath.0.push(Quadratic {
+                abs,
+                x1,
+                y1: -y1,
+                x,
+                y: -y,
+            }),
+            &SmoothQuadratic { abs, x, y } => newpath.0.push(SmoothQuadratic { abs, x, y: -y }),
+            &EllipticalArc {
+                abs,
+                rx,
+                ry,
+                x_axis_rotation,
+                large_arc,
+                sweep,
+                x,
+                y,
+            } => newpath.0.push(EllipticalArc {
+                abs,
+                rx,
+                ry: -ry,
+                x_axis_rotation,
+                large_arc,
+                sweep,
+                x,
+                y: -y,
+            }),
+            &ClosePath { abs } => newpath.0.push(ClosePath { abs }),
         }
     }
 
-    out.push_str(&format!("Path::new(Some(\"{:x}\"), \"{}\"),\n", id as u32, newpath));
+    out.push_str(&format!(
+        "Path::new(Some(\"{:x}\"), \"{}\"),\n",
+        id as u32, newpath
+    ));
 }
 
 fn main() -> Result<(), svgdom::ParserError> {
