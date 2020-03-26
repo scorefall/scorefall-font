@@ -6,7 +6,7 @@ use std::convert::TryInto;
 /// Indices of each glyph (grouping most common ones at the beginning to help
 /// with caching.
 #[repr(u16)]
-enum Glyph {
+pub enum Glyph {
     /* Noteheads */
     NoteheadFill = 0x1,
     NoteheadHalf = 0x2,
@@ -28,15 +28,15 @@ enum Glyph {
     NoteheadWholeDiamond = 0x1A,
     NoteheadDoubleDiamond = 0x1B,
 
-    NoteheadFillSquare = 0x1C,
-    NoteheadHalfSquare = 0x1D,
-    NoteheadWholeSquare = 0x1E,
-    NoteheadDoubleSquare = 0x1F,
+    NoteheadFillSlash = 0x1C,
+    NoteheadHalfSlash = 0x1D,
+    NoteheadWholeSlash = 0x1E,
+    NoteheadDoubleSlash = 0x1F,
 
-    NoteheadFillSlash = 0x20,
-    NoteheadHalfSlash = 0x21,
-    NoteheadWholeSlash = 0x22,
-    NoteheadDoubleSlash = 0x23,
+    NoteheadFillSlashed = 0x20,
+    NoteheadHalfSlashed = 0x21,
+    NoteheadWholeSlashed = 0x22,
+    NoteheadDoubleSlashed = 0x23,
 
     /* Accidentals */
     Flat = 0x4,
@@ -66,6 +66,7 @@ enum Glyph {
     FlagDown64 = 0x33,
 
     /* Rests */
+    RestMulti = 0x5C,
     Rest1 = 0xB,
     Rest2 = 0xC,
     Rest4 = 0xD,
@@ -84,105 +85,133 @@ enum Glyph {
     /// Percussion (Neutral) Clef
     ClefN = 0x37,
 
-    /// Alto Clef (Soprano, Mezzo-Soprano, Alto, Tenor, Baritone)
-    ClefChangeC = 0x38,
-    /// Treble Clef (French Violin, Treble)
-    ClefChangeG = 0x39,
-    /// Bass Clef (Baritone, Bass, Sub-Bass)
-    ClefChangeF = 0x3A,
-
-    /// Alto Clef 8va (Soprano, Mezzo-Soprano, Alto, Tenor, Baritone)
-    ClefC8va = 0x3B,
-    /// Treble Clef 8va (French Violin, Treble)
-    ClefG8va = 0x3C,
-    /// Bass Clef 8va (Baritone, Bass, Sub-Bass)
-    ClefF8va = 0x3D,
-
-    /// Alto Clef 8vb (Soprano, Mezzo-Soprano, Alto, Tenor, Baritone)
-    ClefC8vb = 0x3E,
-    /// Treble Clef 8vb (French Violin, Treble)
-    ClefG8vb = 0x3F,
-    /// Bass Clef 8vb (Baritone, Bass, Sub-Bass)
-    ClefF8vb = 0x40,
-
-    /// Alto Clef 16va (Soprano, Mezzo-Soprano, Alto, Tenor, Baritone)
-    ClefC16va = 0x41,
-    /// Treble Clef 16va (French Violin, Treble)
-    ClefG16va = 0x42,
-    /// Bass Clef 16va (Baritone, Bass, Sub-Bass)
-    ClefF16va = 0x43,
-
-    /// Alto Clef 16vb (Soprano, Mezzo-Soprano, Alto, Tenor, Baritone)
-    ClefC16vb = 0x44,
-    /// Treble Clef 16vb (French Violin, Treble)
-    ClefG16vb = 0x45,
-    /// Bass Clef 16vb (Baritone, Bass, Sub-Bass)
-    ClefF16vb = 0x46,
+    /// Octave Up/Down
+    Clef8 = 0x38,
+    /// 2 Octave Up/Down
+    Clef15 = 0x39,
 
     /* Tab "clefs" */
-    Tab4 = 0x47,
-    Tab6 = 0x48,
+    Tab4 = 0x3A,
+    Tab6 = 0x3B,
 
     /* Dynamics */
-    P = 0x49,
-    MP = 0x4A,
-    MF = 0x4B,
-    F = 0x4C,
+    P = 0x3C,
+    MP = 0x3D,
+    MF = 0x3E,
+    F = 0x3F,
     /// May be displayed as "r" in some fonts.
     S = 0x4D,
     Z = 0x4E,
     N = 0x4F,
 
     /* Time signatures */
-    TimeSig0 = 0x50,
-    TimeSig1 = 0x51,
-    TimeSig2 = 0x52,
-    TimeSig3 = 0x53,
-    TimeSig4 = 0x54,
-    TimeSig5 = 0x55,
-    TimeSig6 = 0x56,
-    TimeSig7 = 0x57,
-    TimeSig8 = 0x58,
-    TimeSig9 = 0x59,
-    TimeSigCommon = 0x5A,
-    TimeSigCut = 0x5B,
-    TimeSigPlus = 0x5C,
+    TimeSig0 = 0x40,
+    TimeSig1 = 0x41,
+    TimeSig2 = 0x42,
+    TimeSig3 = 0x43,
+    TimeSig4 = 0x44,
+    TimeSig5 = 0x45,
+    TimeSig6 = 0x46,
+    TimeSig7 = 0x47,
+    TimeSig8 = 0x48,
+    TimeSig9 = 0x49,
+    TimeSigCommon = 0x4A,
+    TimeSigCut = 0x4B,
+    TimeSigPlus = 0x4C,
 
     /* Repeats */
     RepeatSlash = 0x5D,
-    RepeatDots = 0x5E,
-
-    /* Tuplet */
-    TupletColon = 0x5F,
-    Tuplet0 = 0x60,
-    Tuplet1 = 0x61,
-    Tuplet2 = 0x62,
-    Tuplet3 = 0x63,
-    Tuplet4 = 0x64,
-    Tuplet5 = 0x65,
-    Tuplet6 = 0x66,
-    Tuplet7 = 0x67,
-    Tuplet8 = 0x68,
-    Tuplet9 = 0x69,
+    RepeatUpDot = 0x5E,
+    RepeatDownDot = 0x5F,
 
     /* Jumps */
-    Coda = 0x70,
-    Segno = 0x76,
+    Coda = 0x5A,
+    Segno = 0x5B,
+
+    /* Tuplet */
+    TupletColon = 0x60,
+    Tuplet0 = 0x50,
+    Tuplet1 = 0x51,
+    Tuplet2 = 0x52,
+    Tuplet3 = 0x53,
+    Tuplet4 = 0x54,
+    Tuplet5 = 0x55,
+    Tuplet6 = 0x56,
+    Tuplet7 = 0x57,
+    Tuplet8 = 0x58,
+    Tuplet9 = 0x59,
 
     /* Stem Modifiers */
-    BuzzRoll = 0x6A,
-    Damp = 0x6B,
-    HarpStringNoise = 0x6C,
-    RimShot = 0x6D,
-    BowBridge = 0x6E,
-    BowTailpiece = 0x6F,
-    Tremelo1 = 0x71,
-    Tremelo2 = 0x72,
-    Tremelo3 = 0x73,
-    Tremelo4 = 0x74,
-    Tremelo5 = 0x75,
+    Tremelo1 = 0x61,
+    Tremelo2 = 0x62,
+    Tremelo3 = 0x63,
+    Tremelo4 = 0x64,
+    Tremelo5 = 0x65,
+    BuzzRoll = 0x66,
+    Damp = 0x67,
+    HarpStringNoise = 0x68,
+    RimShot = 0x69,
+    BowBridge = 0x6A,
+    BowTailpiece = 0x6B,
 
-    Len = 0x77,
+    Len = 0x6C,
+}
+
+/// Create defs section of SVG for string of glyphs.
+pub fn generate_defs(glyphs: &str) -> String {
+    const HEADER: &str = "<defs>";
+    const FOOTER: &str = "</defs>";
+
+    // At least as much space will be needed.
+    let output = Vec::with_capacity(glyphs.len() + HEADER.len() + FOOTER.len());
+    let mut writer = std::io::BufWriter::new(std::io::Cursor::new(output));
+
+    // Write to Vec should always succeed except on out of memory.
+    let _ = write!(writer, "{}", HEADER);
+
+    let mut id = 0;
+    for glyph in glyphs.split('\0') {
+        // Write to Vec should always succeed except on out of memory.
+        let _ = write!(writer, "<path id=\"{:X}\" d=\"{}\">", id, glyph);
+        id += 1;
+    }
+
+    assert_eq!(id, Glyph::Len as usize);
+
+    // Unwrap: Write to Vec should always succeed except on out of memory.
+    let _ = write!(writer, "{}", FOOTER);
+
+    // 2 unwraps: Guaranteed to flush OK, and UTF-8 will always be valid.
+    String::from_utf8(writer.into_inner().unwrap().into_inner()).unwrap()
+}
+
+/// Builder for all of the glyphs.
+pub struct GlyphsBuilder {
+    glyphs: Vec<Option<String>>,
+}
+
+impl GlyphsBuilder {
+    pub fn new() -> Self {
+        Self {
+            glyphs: vec![None; Glyph::Len as usize],
+        }
+    }
+
+    /// Add an SVG path.  Must be added in order.
+    pub fn push(&mut self, glyph: Glyph, path: String) {
+        self.glyphs[glyph as usize] = Some(path);
+    }
+
+    pub fn into_string(self) -> String {
+        let mut output = String::new();
+
+        for glyph in self.glyphs.iter() {
+            output.push_str(glyph.as_ref().unwrap());
+            output.push('\0');
+        }
+
+        output
+    }
 }
 
 /// Error for writing the format.
@@ -201,6 +230,8 @@ pub enum ReadError {
     InvalidText,
     /// Unexpected End-Of-File
     UnexpectedEOF,
+    /// Wrong number of glyphs are in the file.
+    WrongGlyphCount,
 }
 
 /// A ScoreFall Font Metadata

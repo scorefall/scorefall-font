@@ -2,6 +2,10 @@
 Convert a font to a ScoreFall Font.  ScoreFall fonts are efficiently stored so
 that they can transferred over the network without causing delays.
 
+```bash
+cargo run --example from_smufl bravura-redist/otf/Bravura.otf bravura-redist/bravura_metadata.json
+```
+
 ## ScoreFall Fonts
 ScoreFall fonts are SVG files (but not SVG fonts).  We use the `<defs>` section of the SVG for the font codepoints.  The codepoints are from [SMuFL](https://github.com/w3c/smufl).
 
