@@ -1,3 +1,5 @@
+// FIXME: Delete This File
+
 use std::fs;
 
 use score2svg::GlyphId;

@@ -2,7 +2,7 @@
 
 use std::collections::HashMap;
 
-use scorefall_font::{Glyph, GlyphsBuilder, SfFontMetadata};
+use sfff::{Glyph, GlyphsBuilder, SfFontMetadata};
 use std::fmt::Write;
 use svgdom::{AttributeId, AttributeValue, ElementId, FilterSvg, Document, Path};
 use serde_json as json;

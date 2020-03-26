@@ -1,18 +1,11 @@
 [package]
-name = "scorefall-font"
+name = "sfff"
 version = "0.1.0"
 authors = ["Jeron Aldaron Lau <jeronlau@plopgrizzly.com>"]
 edition = "2018"
 
-[dependencies]
-# score2svg = {path = "../score2svg"}
+[dev-dependencies]
 svgdom = "0.18"
 serde_json = "1.0"
-muon-rs = "0.2"
 serde = "1.0"
 serde_derive = "1.0"
-
-# For reading TTF/OTF files
-[dev-dependencies.ttf-parser]
-version = "0.5"
-default-features = false # Don't depend on log crate
