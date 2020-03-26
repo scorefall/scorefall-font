@@ -205,9 +205,11 @@ impl GlyphsBuilder {
     pub fn into_string(self) -> String {
         let mut output = String::new();
 
+        let mut count = 0;
         for glyph in self.glyphs.iter() {
-            output.push_str(glyph.as_ref().unwrap());
+            output.push_str(glyph.as_ref().expect(&format!("!! {:X}", count)));
             output.push('\0');
+            count += 1;
         }
 
         output
@@ -215,6 +217,7 @@ impl GlyphsBuilder {
 }
 
 /// Error for writing the format.
+#[derive(Debug)]
 pub enum WriteError {
     /// System prevented write for some reason.
     Prevented,
@@ -223,6 +226,7 @@ pub enum WriteError {
 }
 
 /// Error for reading the format.
+#[derive(Debug)]
 pub enum ReadError {
     /// System prevented read for some reason.
     Prevented,
