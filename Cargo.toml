@@ -1,10 +1,11 @@
 [package]
-name = "sfff"
+name = "font"
 version = "0.1.0"
 authors = ["Jeron Aldaron Lau <jeronlau@plopgrizzly.com>"]
 edition = "2018"
 
-[dev-dependencies]
+[dependencies]
+sfff = { path = "../scorefall-studio/sfff" }
 svgdom = "0.18"
 serde_json = "1.0"
 serde = "1.0"
