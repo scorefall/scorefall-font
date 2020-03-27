@@ -9,7 +9,7 @@ use serde_json as json;
 
 use Glyph::*;
 
-use smufl_serde::SMuFLMetadata;
+use smufl_serde::{SMuFLMetadata, GlyphWithAnchors};
 
 mod smufl_serde {
     #![allow(non_snake_case)]
@@ -89,7 +89,7 @@ mod smufl_serde {
     }
 
     #[derive(Serialize, Deserialize)]
-    pub struct GlyphsWithAnchors {
+    pub struct GlyphWithAnchors {
         /// The exact position at which the bottom right-hand (south-east) corner of
         /// an angled upward-pointing stem connecting the right-hand side of a
         /// notehead to a vertical stem to its left should start, relative to the
@@ -255,7 +255,7 @@ mod smufl_serde {
         pub engravingDefaults: Option<EngravingDefaults>,
         /// A structure for each glyph for which metadata is supplied, with the
         /// canonical glyph name as the key
-        pub glyphsWithAnchors: Option<GlyphsWithAnchors>,
+        pub glyphsWithAnchors: HashMap<String, GlyphWithAnchors>,
         /// List of the glyphs in the font for which stylistic alternates are provided,
         /// together with their name and code point. Applications that cannot access
         /// advanced font features like OpenType stylistic alternates can instead
@@ -688,25 +688,58 @@ fn main() {
 
     let glyph_paths = glyphs.into_string();
     let metadata: SMuFLMetadata = json::from_str(&metadata).unwrap();
-    let metadata = metadata.engravingDefaults.unwrap();
-    let convert = &mut |ss: f32| (ss * STAVE_SPACE as f32) as i32;
+    let engraving = metadata.engravingDefaults.unwrap();
+    let anchors = metadata.glyphsWithAnchors;
+    let bboxes = metadata.glyphBBoxes;
+    let convert = |ss: f32| (ss * STAVE_SPACE as f32) as i32;
+    let stems = |name: &str| {
+        let (a, b) = if let Some(entry) = anchors.get(name) {
+            (entry.stemDownNW.unwrap_or_else(|| bboxes.get(name).unwrap().bBoxSW),
+            entry.stemUpSE.unwrap_or_else(|| bboxes.get(name).unwrap().bBoxNE))
+        } else {
+            (bboxes.get(name).unwrap().bBoxSW, bboxes.get(name).unwrap().bBoxNE)
+        };
+
+        [[convert(a[0]), convert(a[1])], [convert(b[0]), convert(b[1])]]
+    };
     let metadata = SfFontMetadata {
         sffonts_version: 0,
         font_name: "Modern".to_string(),
-        stave_line_thickness: convert(metadata.staffLineThickness),
-        stem_thickness: convert(metadata.stemThickness),
-        ledger_line_thickness: convert(metadata.legerLineThickness),
-        ledger_line_extension: convert(metadata.legerLineExtension),
-        slur_endpoint_thickness: convert(metadata.slurEndpointThickness), 
-        slur_midpoint_thickness: convert(metadata.slurMidpointThickness),
-        barline_thickness: convert(metadata.thinBarlineThickness),
-        thick_barline_thickness: convert(metadata.thickBarlineThickness),
-        barlines_space: convert(metadata.barlineSeparation),
-        barline_repeatdot_space: convert(metadata.repeatBarlineDotSeparation),
-        bracket_thickness: convert(metadata.bracketThickness),
-        subbracket_thickness: convert(metadata.subBracketThickness),
-        hairpin_thickness: convert(metadata.hairpinThickness),
-        rehearsal_box_thickness: convert(metadata.textEnclosureThickness),
+        stave_line_thickness: convert(engraving.staffLineThickness),
+        stem_thickness: convert(engraving.stemThickness),
+        ledger_line_thickness: convert(engraving.legerLineThickness),
+        ledger_line_extension: convert(engraving.legerLineExtension),
+        slur_endpoint_thickness: convert(engraving.slurEndpointThickness), 
+        slur_midpoint_thickness: convert(engraving.slurMidpointThickness),
+        barline_thickness: convert(engraving.thinBarlineThickness),
+        thick_barline_thickness: convert(engraving.thickBarlineThickness),
+        barlines_space: convert(engraving.barlineSeparation),
+        barline_repeatdot_space: convert(engraving.repeatBarlineDotSeparation),
+        bracket_thickness: convert(engraving.bracketThickness),
+        subbracket_thickness: convert(engraving.subBracketThickness),
+        hairpin_thickness: convert(engraving.hairpinThickness),
+        rehearsal_box_thickness: convert(engraving.textEnclosureThickness),
+        notehead: stems("noteheadBlack"),
+        notehead_x: stems("noteheadXBlack"),
+        notehead_diamond: stems("noteheadDiamondBlack"),
+        notehead_triangle: stems("noteheadTriangleUpBlack"),
+        notehead_slash: stems("noteheadSlashHorizontalEnds"),
+        notehead_half: stems("noteheadHalf"),
+        notehead_half_x: stems("noteheadXHalf"),
+        notehead_half_diamond: stems("noteheadDiamondHalf"),
+        notehead_half_triangle: stems("noteheadTriangleUpHalf"),
+        notehead_half_slash: stems("noteheadSlashWhiteHalf"),
+
+        notehead_whole: stems("noteheadWhole"),
+        notehead_whole_x: stems("noteheadXWhole"),
+        notehead_whole_diamond: stems("noteheadDiamondWhole"),
+        notehead_whole_triangle: stems("noteheadTriangleUpWhole"),
+        notehead_whole_slash: stems("noteheadSlashWhiteWhole"),
+        notehead_double: stems("noteheadDoubleWhole"),
+        notehead_double_x: stems("noteheadXDoubleWhole"),
+        notehead_double_diamond: stems("noteheadDiamondDoubleWhole"),
+        notehead_double_triangle: stems("noteheadTriangleUpDoubleWhole"),
+        notehead_double_slash: stems("noteheadSlashWhiteDoubleWhole"),
     };
 
     use std::io::Write;
