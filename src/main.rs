@@ -2,7 +2,7 @@
 
 use std::collections::HashMap;
 
-use sfff::{Glyph, GlyphsBuilder, SfFontMetadata};
+use sfff::{Glyph, GlyphsBuilder, SfFontMetadata, STAVE_SPACE};
 use std::fmt::Write;
 use svgdom::{AttributeId, AttributeValue, ElementId, FilterSvg, Document, Path};
 use serde_json as json;
@@ -296,17 +296,20 @@ mod smufl_serde {
     }
 }
 
-fn path(font: &HashMap<u16, Path>, id: u16) -> String {
+fn path(font: &(HashMap<u16, Path>, f64), id: u16) -> String {
     let mut output = "".to_string();
 
-    let path: svgdom::Path = font.get(&id).unwrap().clone();
+    let path: svgdom::Path = font.0.get(&id).unwrap().clone();
+    let convert = |x: f64| (x * font.1).round();
+    let convert_y = |y: f64| (y * -font.1).round();
 
     for i in path.iter() {
         use svgdom::PathSegment::*;
         let i: svgdom::PathSegment = *i;
         match i {
             MoveTo { abs, x, y } => {
-                let y = -y;
+                let x = convert(x);
+                let y = convert_y(y);
                 let cmd = if abs { "M" } else { "m" };
                 if y < 0.0 {
                     write!(output, "{}{}{}", cmd, x, y).unwrap();
@@ -315,7 +318,8 @@ fn path(font: &HashMap<u16, Path>, id: u16) -> String {
                 }
             },
             LineTo { abs, x, y } => {
-                let y = -y;
+                let x = convert(x);
+                let y = convert_y(y);
                 let cmd = if abs { "L" } else { "l" };
                 if y < 0.0 {
                     write!(output, "{}{}{}", cmd, x, y).unwrap();
@@ -324,11 +328,12 @@ fn path(font: &HashMap<u16, Path>, id: u16) -> String {
                 }
             },
             HorizontalLineTo { abs, x } => {
+                let x = convert(x);
                 let cmd = if abs { "H" } else { "h" };
                 write!(output, "{}{}", cmd, x).unwrap();
             },
             VerticalLineTo { abs, y } => {
-                let y = -y;
+                let y = convert_y(y);
                 let cmd = if abs { "V" } else { "v" };
                 write!(output, "{}{}", cmd, y).unwrap();
             },
@@ -341,9 +346,12 @@ fn path(font: &HashMap<u16, Path>, id: u16) -> String {
                 x,
                 y,
             } => {
-                let y = -y;
-                let y1 = -y1;
-                let y2 = -y2;
+                let x = convert(x);
+                let x1 = convert(x1);
+                let x2 = convert(x2);
+                let y = convert_y(y);
+                let y1 = convert_y(y1);
+                let y2 = convert_y(y2);
                 let cmd = if abs { "C" } else { "c" };
                 write!(output, "{}{}", cmd, x1).unwrap();
                 if y1 < 0.0 {
@@ -373,8 +381,10 @@ fn path(font: &HashMap<u16, Path>, id: u16) -> String {
                 }
             },
             SmoothCurveTo { abs, x2, y2, x, y } => {
-                let y = -y;
-                let y2 = -y2;
+                let x = convert(x);
+                let x2 = convert(x2);
+                let y = convert_y(y);
+                let y2 = convert_y(y2);
                 let cmd = if abs { "S" } else { "s" };
                 write!(output, "{}{}", cmd, x2).unwrap();
                 if y2 < 0.0 {
@@ -394,8 +404,10 @@ fn path(font: &HashMap<u16, Path>, id: u16) -> String {
                 }
             },
             Quadratic { abs, x1, y1, x, y } => {
-                let y = -y;
-                let y1 = -y1;
+                let x = convert(x);
+                let x1 = convert(x1);
+                let y = convert_y(y);
+                let y1 = convert_y(y1);
                 let cmd = if abs { "Q" } else { "q" };
                 write!(output, "{}{}", cmd, x1).unwrap();
                 if y1 < 0.0 {
@@ -415,7 +427,8 @@ fn path(font: &HashMap<u16, Path>, id: u16) -> String {
                 }
             },
             SmoothQuadratic { abs, x, y } => {
-                let y = -y;
+                let x = convert(x);
+                let y = convert_y(y);
                 let cmd = if abs { "T" } else { "t" };
                 if y < 0.0 {
                     write!(output, "{}{}{}", cmd, x, y).unwrap();
@@ -433,8 +446,11 @@ fn path(font: &HashMap<u16, Path>, id: u16) -> String {
                 x,
                 y,
             } => {
-                let ry = -ry;
-                let y = -y;
+                let rx = convert(rx);
+                let ry = convert_y(ry);
+                let x_axis_rotation = convert(x_axis_rotation);
+                let x = convert(x);
+                let y = convert_y(y);
                 let cmd = if abs { "A" } else { "a" };
                 write!(output, "{}{}", cmd, rx).unwrap();
                 if ry < 0.0 {
@@ -500,10 +516,25 @@ fn main() {
 
     // Build hashmap of svg font document paths.
     let iter = font.root().descendants().svg();
+    let mut scalar = None;
     let mut font = HashMap::new();
     for (id, node) in iter {
         let attrs = node.attributes();
         match id {
+            ElementId::FontFace => {
+                // Get units per "em" (Actually units per 5 line stave).
+                let upe = if let Some(&AttributeValue::String(ref upe)) =
+                    attrs.get_value(AttributeId::UnitsPerEm)
+                {
+                    upe.parse::<f64>().unwrap()
+                } else {
+                    panic!("Wrong type for font-face/units-per-em");
+                };
+                // Get units per "ss" (Stave Space).
+                let upss = upe * 0.25;
+                // Calculate scalar value for paths.
+                scalar = Some(STAVE_SPACE as f64 / upss);
+            }
             ElementId::Glyph => {
                 // Glyph needs a name and path.
                 let name = if let Some(&AttributeValue::String(ref name)) =
@@ -539,6 +570,7 @@ fn main() {
             _ => println!("{}", id),
         }
     }
+    let font = (font, scalar.unwrap());
 
     // Build glyphs string.
     let mut glyphs = GlyphsBuilder::new();
@@ -657,11 +689,7 @@ fn main() {
     let glyph_paths = glyphs.into_string();
     let metadata: SMuFLMetadata = json::from_str(&metadata).unwrap();
     let metadata = metadata.engravingDefaults.unwrap();
-
-    let convert = &mut |ss: f32| {
-        (ss * 1000.0) as u32
-    };
-
+    let convert = &mut |ss: f32| (ss * STAVE_SPACE as f32) as i32;
     let metadata = SfFontMetadata {
         sffonts_version: 0,
         font_name: "Modern".to_string(),
